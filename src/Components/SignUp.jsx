@@ -1,8 +1,11 @@
 import { useState } from "react";
+import ErrorPopup from "./ErrorPopup";
 
 function SignIn() {
   const [formData, setFormData] = useState({});
+  const [passCheck, setPassCheck] = useState("");
   const handleChange = (e) => {
+    setPassCheck("");
     // console.log(e.target.value);
     const { name, value } = e.target;
     setFormData((previousData) => ({
@@ -14,17 +17,28 @@ function SignIn() {
   const handleSubmit = (e) => {
     e.preventDefault();
     //API use
-    console.log(formData);
+    if (formData.password == formData.repassword) {
+      console.log(formData);
+    } else {
+      setPassCheck("Password does not match");
+      handleShowError()
+      //   console.log("Please check your password");
+    }
+  };
+  const [isErrorVisible, setIsErrorVisible] = useState(false);
+
+  const handleShowError = () => {
+    setIsErrorVisible(true);
+  };
+
+  const handleCloseError = () => {
+    console.log("yes close")
+    setIsErrorVisible(false);
   };
   return (
     <>
-      <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="flex min-h-full flex-col justify-center px-6 py-1 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
-            className="mx-auto h-10 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-            alt="Your Company"
-          />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Sign Up to your account
           </h2>
@@ -117,6 +131,11 @@ function SignIn() {
                 />
               </div>
             </div>
+            
+     
+      {isErrorVisible && (
+        <ErrorPopup message={passCheck} onClose={handleCloseError} />
+      )}
             <div>
               <div className="flex items-center justify-between">
                 <label
@@ -150,6 +169,7 @@ function SignIn() {
             <div>
               <button
                 type="submit"
+                // onClick={handleShowError}
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Sign Up
@@ -160,6 +180,7 @@ function SignIn() {
             Welcome ..
             <a
               href="#"
+              
               className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
             >
               Sign up
