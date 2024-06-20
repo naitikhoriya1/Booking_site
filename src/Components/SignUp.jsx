@@ -1,49 +1,66 @@
 import { useState } from "react";
 import ErrorPopup from "./ErrorPopup";
 
-function SignIn() {
-  const [formData, setFormData] = useState({});
+function SignUp() {
+  const [formData, setFormData] = useState({
+    email: "",
+    username: "",
+    Mobile: "",
+    password: "",
+    // repassword: "",
+  });
   const [passCheck, setPassCheck] = useState("");
+  const [isErrorVisible, setIsErrorVisible] = useState(false);
+
   const handleChange = (e) => {
     setPassCheck("");
-    // console.log(e.target.value);
     const { name, value } = e.target;
     setFormData((previousData) => ({
       ...previousData,
       [name]: value,
     }));
-    // console.log(formData);
   };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    //API use
-    if (formData.password == formData.repassword) {
-      console.log(formData);
-    } else {
-      setPassCheck("Password does not match");
-      handleShowError()
-      //   console.log("Please check your password");
-    }
-  };
-  const [isErrorVisible, setIsErrorVisible] = useState(false);
 
   const handleShowError = () => {
     setIsErrorVisible(true);
   };
 
   const handleCloseError = () => {
-    console.log("yes close")
     setIsErrorVisible(false);
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (formData.password === formData.repassword) {
+      console.log(formData);
+      try {
+        const response = await fetch("http://localhost:3000/SignUp", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+        const result = await response.json();
+        console.log(result);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    } else {
+      setPassCheck("Password does not match");
+      handleShowError();
+    }
+  };
+
   return (
     <>
       <div className="flex min-h-full flex-col justify-center px-6 py-1 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+          <h2 className="mt-1 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Sign Up to your account
           </h2>
         </div>
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
           <form
             className="space-y-6"
             action="#"
@@ -131,11 +148,10 @@ function SignIn() {
                 />
               </div>
             </div>
-            
-     
-      {isErrorVisible && (
-        <ErrorPopup message={passCheck} onClose={handleCloseError} />
-      )}
+
+            {isErrorVisible && (
+              <ErrorPopup message={passCheck} onClose={handleCloseError} />
+            )}
             <div>
               <div className="flex items-center justify-between">
                 <label
@@ -176,11 +192,10 @@ function SignIn() {
               </button>
             </div>
           </form>
-          <p className="mt-10 text-center text-sm text-gray-500">
+          <p className="mt-5 text-center text-sm text-gray-500">
             Welcome ..
             <a
               href="#"
-              
               className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
             >
               Sign up
@@ -191,5 +206,4 @@ function SignIn() {
     </>
   );
 }
-
-export default SignIn;
+export default SignUp;
