@@ -1,7 +1,11 @@
 import { useState } from "react";
 
 function SignIn() {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
   const handleChange = (e) => {
     // console.log(e.target.value);
     const { name, value } = e.target;
@@ -11,11 +15,24 @@ function SignIn() {
     }));
     // console.log(formData);
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    //API use
-    console.log(formData);
+    try {
+      const response = await fetch("http://localhost:3000/SignIn", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+      console.log("Success:", data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
+  //API use
+
   return (
     <>
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">

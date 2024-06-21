@@ -4,6 +4,7 @@ import SignUp from "./Components/SignUp";
 import Navbar from "./Components/Navbar";
 import Card from "./Components/Card";
 import Slidebar from "./Components/Slidebar";
+import BookingFrom from "./Components/BookingForm";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/Navbar" element={<Navbar />} />
           <Route path="/Card" element={<Card />} />
           <Route path="/Slidebar" element={<Slidebar />} />
+          <Route path="/BookingForm" element={<BookingFrom />} />
         </Routes>
       </Router>
     </>
