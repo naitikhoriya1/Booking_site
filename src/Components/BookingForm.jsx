@@ -1,9 +1,52 @@
 import { useState } from "react";
 
 function BookingForm() {
-  let [formData, setFormData] = useState({});
-  const handleChange
+  const [formData, setFormData] = useState({
+    hotelname: "",
+    hotelemail: "",
+    hotelphone: "",
+    hotelrent: "",
+    hotellocation: "",
+  });
+  const handleChange = (e) => {
+    console.log(e.target.value);
+    const { name, value } = e.target;
+    setFormData((previousData) => ({
+      ...previousData,
+      [name]: value,
+    }));
+    // console.log(formData);
+  };
+  const handleFileUpload = (e) => {
+    const { name, files } = e.target;
+    setFormData((previousData) => ({
+      ...previousData,
+      [name]: files[0],
+    }));
+  };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(formData);
+    const formD = new FormData();
+    formD.append("hotelimage", formData.hotelimage);
+    formD.append("hotel name", formData.hotelname);
+    formD.append("email", formData.hotelemail);
+    formD.append("Mobile No ", formData.hotelphone);
+    formD.append("rent", formData.hotelrent);
+    formD.append("Location", formData.hotellocation);
+    try {
+      const response = await fetch("http://localhost:3000/BookingForm", {
+        method: "POST",
+
+        body: formD,
+      });
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
   return (
     <>
       <div className="flex min-h-full flex-col justify-center px-6 py-1 lg:px-8">
@@ -13,7 +56,12 @@ function BookingForm() {
           </h2>
         </div>
         <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+          <form
+            className="space-y-6"
+            action="#"
+            method="POST"
+            onSubmit={handleSubmit}
+          >
             <div>
               <label
                 htmlFor="email"
@@ -28,6 +76,8 @@ function BookingForm() {
                   type="text"
                   autoComplete="email"
                   required=""
+                  value={formData.hotelname}
+                  onChange={handleChange}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
@@ -45,6 +95,8 @@ function BookingForm() {
                   name="hotelemail"
                   type="email"
                   required=""
+                  value={formData.hotelemail}
+                  onChange={handleChange}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
@@ -62,6 +114,8 @@ function BookingForm() {
                   name="hotelphone"
                   type="number"
                   required=""
+                  value={formData.hotelphone}
+                  onChange={handleChange}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
@@ -83,6 +137,8 @@ function BookingForm() {
                   type="text"
                   autoComplete="current-password"
                   required=""
+                  value={formData.hotellocation}
+                  onChange={handleChange}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
@@ -109,6 +165,8 @@ function BookingForm() {
                   type="number"
                   autoComplete="current-password"
                   required=""
+                  value={formData.hotelrent}
+                  onChange={handleChange}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
@@ -125,10 +183,11 @@ function BookingForm() {
               <div className="mt-2">
                 <input
                   id="repassword"
-                  name="avatar"
+                  name="hotelimage"
                   type="file"
                   autoComplete="current-password"
                   required=""
+                  onChange={handleFileUpload}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
@@ -157,4 +216,5 @@ function BookingForm() {
     </>
   );
 }
+
 export default BookingForm;
